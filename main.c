@@ -37,6 +37,22 @@ volatile unsigned char adc_ch; /* current adc channel */
 
 
 /***************************************************************************/
+void camerafocus(char on)
+{
+	if (on)
+		PORTD &= ~(1<<PD4); /* set PB0 output to GND turning led on */
+	else
+		PORTD |= (1<<PD4); /* set PB0 output to VCC turning led off */
+}
+/***************************************************************************/
+void cameratrigger(char on)
+{
+	if (on)
+		PORTD &= ~(1<<PD7); /* set PB0 output to GND turning led on */
+	else
+		PORTD |= (1<<PD7); /* set PB0 output to VCC turning led off */
+}
+/***************************************************************************/
 void led(char on)
 {
 	if (on)
@@ -49,6 +65,14 @@ void led_init(void)
 {
 	led (0); /* make sure the led is off */
 	DDRB |= (1<<DDB0); /* enable PB0 (led pin) as output */
+}
+/***************************************************************************/
+void cameratrigger_init(void)
+{
+	camerafocus (0); /* make sure the led is off */
+	cameratrigger (0); /* make sure the led is off */
+	DDRD |= (1<<DDD4); /* enable PB0 (led pin) as output */
+	DDRD |= (1<<DDD7); /* enable PB0 (led pin) as output */
 }
 /***************************************************************************/
 /* ADC interrupt handler */
@@ -79,13 +103,16 @@ void adc_init (void)
 int main(void)
 {
 	char led_stat = 0;
+	char focus_stat = 0;
 	long count = 0;
 
 	led_init(); /* initialize led */
+	cameratrigger_init(); /* initialize led */
 	adc_init(); /* Initialize adc */
 	sei(); // %cli ?
 
 
+	int counter2 = 0;
 
 	for (;;) /* go into an endless loop */
 	{
@@ -95,10 +122,13 @@ int main(void)
 		{
 			count=0; /* reset count */
 			if (led_stat == 0) /* flip led state */
+			{
 				led_stat = 1;
+			}
 			else
 				led_stat = 0;
 			led(led_stat); /* update led state */
+			camerafocus(led_stat);
 		}
 	}
 	return 0; /* just for the principle as we never get here */
