@@ -67,12 +67,12 @@ void led_init(void)
 	DDRB |= (1<<DDB0); /* enable PB0 (led pin) as output */
 }
 /***************************************************************************/
-void cameratrigger_init(void)
+void camera_init(void)
 {
 	camerafocus (0); /* make sure the led is off */
 	cameratrigger (0); /* make sure the led is off */
-	DDRD |= (1<<DDD4); /* enable PB0 (led pin) as output */
-	DDRD |= (1<<DDD7); /* enable PB0 (led pin) as output */
+	DDRD |= (1<<PD4); /* enable PB0 (led pin) as output */
+	DDRD |= (1<<PD7); /* enable PB0 (led pin) as output */
 }
 /***************************************************************************/
 /* ADC interrupt handler */
@@ -105,14 +105,14 @@ int main(void)
 	char led_stat = 0;
 	char focus_stat = 0;
 	long count = 0;
+	long counter2 = 0;
 
 	led_init(); /* initialize led */
-	cameratrigger_init(); /* initialize led */
+	camera_init(); /* initialize led */
 	adc_init(); /* Initialize adc */
 	sei(); // %cli ?
 
 
-	int counter2 = 0;
 
 	for (;;) /* go into an endless loop */
 	{
@@ -128,7 +128,21 @@ int main(void)
 			else
 				led_stat = 0;
 			led(led_stat); /* update led state */
-			camerafocus(led_stat);
+			counter2++;
+			if(counter2 > 10)
+			{
+				counter2 = 0;
+				if(focus_stat == 0)
+				{
+					focus_stat = 1;
+				}
+				else
+				{
+					focus_stat = 0;
+				}
+			}
+			cameratrigger(focus_stat);
+			camerafocus(focus_stat);
 		}
 	}
 	return 0; /* just for the principle as we never get here */
