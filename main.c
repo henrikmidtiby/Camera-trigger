@@ -48,9 +48,9 @@ void camerafocus(char on)
 void cameratrigger(char on)
 {
 	if (on)
-		PORTD &= ~(1<<PD7); /* set PB0 output to GND turning led on */
+		PORTD &= ~(1<<PD6); /* set PB0 output to GND turning led on */
 	else
-		PORTD |= (1<<PD7); /* set PB0 output to VCC turning led off */
+		PORTD |= (1<<PD6); /* set PB0 output to VCC turning led off */
 }
 /***************************************************************************/
 void led(char on)
@@ -71,8 +71,8 @@ void camera_init(void)
 {
 	camerafocus (0); /* make sure the led is off */
 	cameratrigger (0); /* make sure the led is off */
-	DDRD |= (1<<PD4); /* enable PB0 (led pin) as output */
-	DDRD |= (1<<PD7); /* enable PB0 (led pin) as output */
+	// DDRD |= (1<<PD4); /* enable PB0 (led pin) as output */
+	DDRD |= (1<<PD6); /* enable PB0 (led pin) as output */
 }
 /***************************************************************************/
 /* ADC interrupt handler */
@@ -143,7 +143,6 @@ int main(void)
 					focus_stat = 0;
 				}
 			}
-			camerafocus(focus_stat);
 		}
 	}
 	return 0; /* just for the principle as we never get here */
