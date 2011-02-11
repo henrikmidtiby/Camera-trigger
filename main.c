@@ -18,6 +18,7 @@
 /* includes */
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 
 /***************************************************************************/
 /* defines */
@@ -114,11 +115,13 @@ int main(void)
 
 
 
+	// Set the output such that the camera is not triggered.
+	cameratrigger(1);
 	for (;;) /* go into an endless loop */
 	{
 		count++; /* increace count by one */
 		 
-		if(count / (10 + adc_data[0]) > 100) /* if time to switch led state */
+		if(count / (10 + adc_data[0]) > 500) /* if time to switch led state */
 		{
 			count=0; /* reset count */
 			if (led_stat == 0) /* flip led state */
@@ -126,22 +129,17 @@ int main(void)
 				led_stat = 1;
 			}
 			else
+			{
 				led_stat = 0;
+			}
 			led(led_stat); /* update led state */
 			counter2++;
 			if(counter2 > 20)
 			{
 				counter2 = 0;
-				if(focus_stat == 0)
-				{
-					focus_stat = 1;
-					cameratrigger(1);
-					cameratrigger(0);
-				}
-				else
-				{
-					focus_stat = 0;
-				}
+				cameratrigger(0);
+				_delay_ms(10000);
+				cameratrigger(1);
 			}
 		}
 	}
