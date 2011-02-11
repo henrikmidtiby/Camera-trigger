@@ -129,19 +129,20 @@ int main(void)
 				led_stat = 0;
 			led(led_stat); /* update led state */
 			counter2++;
-			if(counter2 > 10)
+			if(counter2 > 20)
 			{
 				counter2 = 0;
 				if(focus_stat == 0)
 				{
 					focus_stat = 1;
+					cameratrigger(1);
+					cameratrigger(0);
 				}
 				else
 				{
 					focus_stat = 0;
 				}
 			}
-			cameratrigger(focus_stat);
 			camerafocus(focus_stat);
 		}
 	}
