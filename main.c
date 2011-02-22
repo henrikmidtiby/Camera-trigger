@@ -24,6 +24,7 @@
 /* defines */
 #define false				0
 #define true				1
+#define F_CPU 16000000UL
 
 
 
@@ -138,7 +139,11 @@ int main(void)
 			{
 				counter2 = 0;
 				cameratrigger(0);
-				_delay_ms(10000);
+				_delay_ms(40000);
+				_delay_ms(40000);
+				_delay_ms(40000);
+				_delay_ms(40000);
+				_delay_ms(40000);
 				cameratrigger(1);
 			}
 		}
